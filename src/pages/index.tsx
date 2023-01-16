@@ -3,9 +3,6 @@ import Head from 'next/head'
 import React from 'react'
 import styled from 'styled-components'
 import { useState } from 'react'
-import Button from '@mui/material/Button'
-import { TableRow } from '@mui/material'
-import { rootShouldForwardProp } from '@mui/material/styles/styled'
 import {
   Cell,
   Game,
@@ -19,11 +16,23 @@ import {
   Vertical,
   Bottom,
   CellOpen,
-} from '../component/css'
-
-function createData(x: number, y: number) {
-  return { x, y }
-}
+  SubBox,
+  SubCenter,
+  SubLeftIndent,
+  SubMain,
+  SubRightIndent,
+  SubTopIndent,
+  ShortVertical,
+  CountZero,
+  CounterLeft,
+  CounterLeftIndent,
+  Faice,
+  CounterMain,
+  CounterRight,
+  CounterTopIndent,
+  InCounterIndent,
+  FaiceBox,
+} from '../../styles/css'
 
 const HomePage: NextPage = () => {
   const [board, setBoard] = useState([
@@ -31,7 +40,7 @@ const HomePage: NextPage = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -39,8 +48,14 @@ const HomePage: NextPage = () => {
   ])
   const hit = (x: number, y: number) => {
     const isBoard: number[][] = JSON.parse(JSON.stringify(board))
+
+    //isBoard[y][x]がクリックした座標を変化
     isBoard[y][x] = 1
-    console.log(x, y)
+
+    function getRandomInt(max: number) {
+      return Math.floor(Math.random() * max)
+    }
+
     setBoard(isBoard)
   }
   return (
@@ -50,6 +65,47 @@ const HomePage: NextPage = () => {
           <LeftTop />
           <StraitLine />
           <RightTop />
+        </UpperFrame>
+        <SubBox>
+          <ShortVertical />
+          <SubMain>
+            <SubTopIndent />
+            <SubCenter>
+              <SubLeftIndent />
+              <SubRightIndent />
+              <CounterLeft>
+                <CounterTopIndent />
+                <CounterMain>
+                  <InCounterIndent />
+                  <CountZero />
+                  <InCounterIndent />
+                  <CountZero />
+                  <InCounterIndent />
+                  <CountZero />
+                </CounterMain>
+              </CounterLeft>
+              <CounterRight>
+                <CounterTopIndent />
+                <CounterMain>
+                  <InCounterIndent />
+                  <CountZero />
+                  <InCounterIndent />
+                  <CountZero />
+                  <InCounterIndent />
+                  <CountZero />
+                </CounterMain>
+              </CounterRight>
+            </SubCenter>
+            <FaiceBox>
+              <Faice />
+            </FaiceBox>
+          </SubMain>
+          <ShortVertical />
+        </SubBox>
+        <UpperFrame>
+          <Bottom />
+          <StraitLine />
+          <Bottom />
         </UpperFrame>
         <CenterBox>
           <Vertical />
@@ -61,7 +117,13 @@ const HomePage: NextPage = () => {
                     key={x}
                     onClick={() => hit(x, y)}
                   >
-                    {board[y][x] === 0 ? <Cell /> : <CellOpen />}
+                    {board[y][x] === 0 ? (
+                      <Cell />
+                    ) : board[y][x] === 1 ? (
+                      <CellOpen />
+                    ) : (
+                      <Cell />
+                    )}
                   </Cell>
                 ))}
               </Cell>
