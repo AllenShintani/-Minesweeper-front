@@ -3,6 +3,7 @@ import Head from 'next/head'
 import React from 'react'
 import styled from 'styled-components'
 import { useState } from 'react'
+import { getRandomInt } from '../component/func'
 import {
   Cell,
   Game,
@@ -32,7 +33,18 @@ import {
   CounterTopIndent,
   InCounterIndent,
   FaiceBox,
+  RedBomber,
+  Bomber,
+  OpenEight,
+  OpenFive,
+  OpenFour,
+  OpenOne,
+  OpenSeven,
+  OpenSix,
+  OpenThree,
+  OpenTwo,
 } from '../../styles/css'
+import { number } from 'prop-types'
 
 const HomePage: NextPage = () => {
   const [board, setBoard] = useState([
@@ -46,18 +58,94 @@ const HomePage: NextPage = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ])
+  //ゲームスタート！
+  const isBoard: number[][] = JSON.parse(JSON.stringify(board))
+  const [bombs, setBombs] = useState<{ [key: number]: number }>({ 11: 0 })
+  const [countBomb, setCountBomb] = useState<number>(0)
+  function restart() {
+    let bombNum = 0
+    //二次元配列を１次元として格納
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (getRandomInt(100) < 16) {
+          //2はbombs
+          bombs[i * 10 + j] = -2
+          bombNum += 1
+        } else {
+          bombs[i * 10 + j] = 0
+        }
+        //ここでオープンしたセルをリセット
+        isBoard[j][i] = 0
+      }
+    }
+    setCountBomb(bombNum)
+    setBoard(isBoard)
+    return console.log(bombs)
+  }
+
+  //盤面をたたいた時の処理
   const hit = (x: number, y: number) => {
     const isBoard: number[][] = JSON.parse(JSON.stringify(board))
 
-    //isBoard[y][x]がクリックした座標を変化
-    isBoard[y][x] = 1
-
-    function getRandomInt(max: number) {
-      return Math.floor(Math.random() * max)
+    //叩いたのはボムか？
+    function judge(tap: number) {
+      console.log(bombs)
+      console.log(tap)
+      if (bombs[tap] === -2) {
+        for (let i = 0; i < 89; i++) {
+          if (bombs[i] === -2) {
+            isBoard[i % 10][Math.floor(i / 10)] = -2
+          }
+        }
+        isBoard[y][x] = -1
+        return
+      } else {
+        //ボム以外を踏んだ時の処理
+        return addCell()
+      }
     }
 
+    //四隅などの例外処理消すためにセルの行列を便宜上増やす
+    function addCell() {
+      /* for (let i = 0; i < 10; i++) {
+        bombs[9 + i * 10] = 0
+        bombs[90 + i] = 0
+      }*/
+      return arroundBomb(x * 10 + y)
+    }
+
+    function arroundBomb(tap: number) {
+      //周囲を列挙
+      const bombsLists = [
+        tap - 1,
+        tap + 1,
+        tap + 10,
+        tap - 10,
+        tap + 11,
+        tap - 11,
+        tap + 9,
+        tap - 9,
+      ]
+      let bombCount = 0
+      bombsLists.forEach((exprosion) => {
+        if (bombs[exprosion] !== undefined) {
+          if (bombs[exprosion] === -2) {
+            bombCount += 1
+          }
+        }
+      })
+      isBoard[y][x] = bombCount
+      //周囲にボムが全くなかった場合
+      if (bombCount === 0) {
+        isBoard[y][x] = 9
+      }
+    }
+
+    console.log(y, x)
+    judge(x * 10 + y)
     setBoard(isBoard)
   }
+
   return (
     <Container>
       <Game>
@@ -97,7 +185,7 @@ const HomePage: NextPage = () => {
               </CounterRight>
             </SubCenter>
             <FaiceBox>
-              <Faice />
+              <Faice onClick={() => restart()} />
             </FaiceBox>
           </SubMain>
           <ShortVertical />
@@ -120,9 +208,27 @@ const HomePage: NextPage = () => {
                     {board[y][x] === 0 ? (
                       <Cell />
                     ) : board[y][x] === 1 ? (
+                      <OpenOne />
+                    ) : board[y][x] === 2 ? (
+                      <OpenTwo />
+                    ) : board[y][x] === 3 ? (
+                      <OpenThree />
+                    ) : board[y][x] === 4 ? (
+                      <OpenFour />
+                    ) : board[y][x] === 5 ? (
+                      <OpenFive />
+                    ) : board[y][x] === 6 ? (
+                      <OpenSix />
+                    ) : board[y][x] === 7 ? (
+                      <OpenSeven />
+                    ) : board[y][x] === 8 ? (
+                      <OpenEight />
+                    ) : board[y][x] === 9 ? (
                       <CellOpen />
+                    ) : board[y][x] === -1 ? (
+                      <RedBomber />
                     ) : (
-                      <Cell />
+                      <Bomber />
                     )}
                   </Cell>
                 ))}

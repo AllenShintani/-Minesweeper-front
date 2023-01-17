@@ -117,7 +117,21 @@ export const CountZero = styled(Origin)`
   background-size: 100% 100%;
   background-image: url(https://minesweeper.online/img/skins/hd/d0.svg?v=3);
 `
-
+export const CountOne = styled(CountZero)`
+  background-image: url(https://minesweeper.online/img/skins/hd/d1.svg?v=3);
+`
+export const CountTwo = styled(CountZero)`
+  background-image: url(https://minesweeper.online/img/skins/hd/d1.svg?v=3);
+`
+export const CountThree = styled(CountZero)`
+  background-image: url(https://minesweeper.online/img/skins/hd/d1.svg?v=3);
+`
+export const CountFour = styled(CountZero)`
+  background-image: url(https://minesweeper.online/img/skins/hd/d1.svg?v=3);
+`
+export const CountFive = styled(CountZero)`
+  background-image: url(https://minesweeper.online/img/skins/hd/d1.svg?v=3);
+`
 export const CounterRight = styled(CounterLeft)`
   float: right !important;
 `
@@ -189,6 +203,49 @@ export const Cell = styled(Origin)`
 `
 export const CellOpen = styled(Cell)`
   background-image: url(https://minesweeper.online/img/skins/hd/type0.svg?v=3);
+`
+
+export const RedBomber = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/mine_red.svg?v=3);
+`
+
+export const Bomber = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/mine.svg?v=3);
+`
+
+export const Flag = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/flag.svg?v=3);
+`
+
+export const OpenOne = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type1.svg?v=3);
+`
+
+export const OpenTwo = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type2.svg?v=3);
+`
+
+export const OpenThree = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type3.svg?v=3);
+`
+
+export const OpenFour = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type4.svg?v=3);
+`
+
+export const OpenFive = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type5.svg?v=3);
+`
+
+export const OpenSix = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type6.svg?v=3);
+`
+
+export const OpenSeven = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type7.svg?v=3);
+`
+export const OpenEight = styled(Cell)`
+  background-image: url(https://minesweeper.online/img/skins/hd/type8.svg?v=3);
 `
 
 export const Bottom = styled(Origin)`
