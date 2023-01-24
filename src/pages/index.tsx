@@ -1,37 +1,19 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import React from 'react'
-import styled from 'styled-components'
 import { useState } from 'react'
 import { getRandomInt } from '../component/func'
 import {
   Cell,
   Game,
-  UpperFrame,
-  LeftTop,
   Container,
-  StraitLine,
-  RightTop,
   CenterBox,
   MainBox,
   Vertical,
-  Bottom,
   CellOpen,
   SubBox,
-  SubCenter,
-  SubLeftIndent,
   SubMain,
-  SubRightIndent,
-  SubTopIndent,
   ShortVertical,
-  CountZero,
-  CounterLeft,
-  CounterLeftIndent,
   Faice,
-  CounterMain,
-  CounterRight,
-  CounterTopIndent,
-  InCounterIndent,
   FaiceBox,
   RedBomber,
   Bomber,
@@ -44,7 +26,8 @@ import {
   OpenThree,
   OpenTwo,
 } from '../../styles/css'
-import { number } from 'prop-types'
+import { Underframe, Upperframe } from 'src/component/Frame'
+import { Subcenter } from 'src/component/SumbCenter'
 
 const HomePage: NextPage = () => {
   const [board, setBoard] = useState([
@@ -61,24 +44,20 @@ const HomePage: NextPage = () => {
   //ゲームスタート！
   const isBoard: number[][] = JSON.parse(JSON.stringify(board))
   const [bombs, setBombs] = useState<{ [key: number]: number }>({ 11: 0 })
-  const [countBomb, setCountBomb] = useState<number>(0)
   function restart() {
-    let bombNum = 0
     //二次元配列を１次元として格納
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 9; j++) {
         if (getRandomInt(100) < 16) {
-          //2はbombs
+          //-2はbombs
           bombs[i * 10 + j] = -2
-          bombNum += 1
         } else {
           bombs[i * 10 + j] = 0
         }
-        //ここでオープンしたセルをリセット
+        //ここでオープンしてあるセルをリセット
         isBoard[j][i] = 0
       }
     }
-    setCountBomb(bombNum)
     setBoard(isBoard)
     return console.log(bombs)
   }
@@ -89,10 +68,8 @@ const HomePage: NextPage = () => {
 
     //叩いたのはボムか？
     function judge(tap: number) {
-      console.log(bombs)
-      console.log(tap)
       if (bombs[tap] === -2) {
-        for (let i = 0; i < 89; i++) {
+        for (let i = 0; i < 82; i++) {
           if (bombs[i] === -2) {
             isBoard[i % 10][Math.floor(i / 10)] = -2
           }
@@ -101,17 +78,8 @@ const HomePage: NextPage = () => {
         return
       } else {
         //ボム以外を踏んだ時の処理
-        return addCell()
+        return arroundBomb(x * 10 + y)
       }
-    }
-
-    //四隅などの例外処理消すためにセルの行列を便宜上増やす
-    function addCell() {
-      /* for (let i = 0; i < 10; i++) {
-        bombs[9 + i * 10] = 0
-        bombs[90 + i] = 0
-      }*/
-      return arroundBomb(x * 10 + y)
     }
 
     function arroundBomb(tap: number) {
@@ -134,14 +102,11 @@ const HomePage: NextPage = () => {
           }
         }
       })
-      isBoard[y][x] = bombCount
+      isBoard[tap % 10][Math.floor(tap / 10)] = bombCount
       //周囲にボムが全くなかった場合
       if (bombCount === 0) {
-        isBoard[Math.floor(tap / 10)][tap % 10] = 9
-        console.log(tap)
+        isBoard[tap % 10][Math.floor(tap / 10)] = 9
         bombsLists.forEach((t) => {
-          console.log(Math.floor(t / 10))
-          console.log(t % 10)
           //配列に存在しない値を比較することを回避
           if (
             Math.floor(t / 10) < 9 &&
@@ -149,10 +114,7 @@ const HomePage: NextPage = () => {
             t % 10 < 9 &&
             t % 10 > -1
           ) {
-            console.log('f')
-
-            if (isBoard[Math.floor(t / 10)][t % 10] === 0) {
-              console.log(isBoard[Math.floor(t / 10)][t % 10])
+            if (isBoard[t % 10][Math.floor(t / 10)] === 0) {
               arroundBomb(t)
             }
           }
@@ -160,60 +122,26 @@ const HomePage: NextPage = () => {
       }
     }
 
-    console.log(y, x)
-    judge(x * 10 + y)
+    const point = x * 10 + y
+    judge(point)
     setBoard(isBoard)
   }
 
   return (
     <Container>
       <Game>
-        <UpperFrame>
-          <LeftTop />
-          <StraitLine />
-          <RightTop />
-        </UpperFrame>
+        <Upperframe />
         <SubBox>
           <ShortVertical />
           <SubMain>
-            <SubTopIndent />
-            <SubCenter>
-              <SubLeftIndent />
-              <SubRightIndent />
-              <CounterLeft>
-                <CounterTopIndent />
-                <CounterMain>
-                  <InCounterIndent />
-                  <CountZero />
-                  <InCounterIndent />
-                  <CountZero />
-                  <InCounterIndent />
-                  <CountZero />
-                </CounterMain>
-              </CounterLeft>
-              <CounterRight>
-                <CounterTopIndent />
-                <CounterMain>
-                  <InCounterIndent />
-                  <CountZero />
-                  <InCounterIndent />
-                  <CountZero />
-                  <InCounterIndent />
-                  <CountZero />
-                </CounterMain>
-              </CounterRight>
-            </SubCenter>
+            <Subcenter />
             <FaiceBox>
               <Faice onClick={() => restart()} />
             </FaiceBox>
           </SubMain>
           <ShortVertical />
         </SubBox>
-        <UpperFrame>
-          <Bottom />
-          <StraitLine />
-          <Bottom />
-        </UpperFrame>
+        <Underframe />
         <CenterBox>
           <Vertical />
           <MainBox>
@@ -256,11 +184,7 @@ const HomePage: NextPage = () => {
           </MainBox>
           <Vertical />
         </CenterBox>
-        <UpperFrame>
-          <Bottom />
-          <StraitLine />
-          <Bottom />
-        </UpperFrame>
+        <Underframe />
       </Game>
     </Container>
   )
