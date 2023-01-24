@@ -137,7 +137,26 @@ const HomePage: NextPage = () => {
       isBoard[y][x] = bombCount
       //周囲にボムが全くなかった場合
       if (bombCount === 0) {
-        isBoard[y][x] = 9
+        isBoard[Math.floor(tap / 10)][tap % 10] = 9
+        console.log(tap)
+        bombsLists.forEach((t) => {
+          console.log(Math.floor(t / 10))
+          console.log(t % 10)
+          //配列に存在しない値を比較することを回避
+          if (
+            Math.floor(t / 10) < 9 &&
+            Math.floor(t / 10) > -1 &&
+            t % 10 < 9 &&
+            t % 10 > -1
+          ) {
+            console.log('f')
+
+            if (isBoard[Math.floor(t / 10)][t % 10] === 0) {
+              console.log(isBoard[Math.floor(t / 10)][t % 10])
+              arroundBomb(t)
+            }
+          }
+        })
       }
     }
 
